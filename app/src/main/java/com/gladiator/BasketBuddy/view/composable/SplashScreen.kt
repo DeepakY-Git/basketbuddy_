@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -20,6 +21,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ModifierLocalBeyondBoundsLayout
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -35,6 +37,7 @@ fun SplashScreen(onNavigate: () -> Unit){
     LaunchedEffect(Unit) {
         delay(2500)
         onNavigate()
+        //navController.navigate
     }
 
     Box(
@@ -49,25 +52,32 @@ fun SplashScreen(onNavigate: () -> Unit){
         ) {
             Box(
                 modifier = Modifier
-                    .size(110.dp)
-                    .background(Color.White, shape = CircleShape),
+                    .size(250.dp),
+                    //.background(Color.White, shape = CircleShape),
                 contentAlignment = Alignment.Center
             ){
               Image(
-                  painter = painterResource(R.drawable.baseline_shopping_basket),
+                  painter = painterResource(R.drawable.basket),
                   contentDescription = "Basket Image",
-                  modifier = Modifier.size(60.dp)
+                  modifier = Modifier.size(200.dp)
               )
             }
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(5.dp))
 
             Text(
                 "Basket Buddy",
-                fontSize = 32.sp,
+                fontSize = 50.sp,
                 fontWeight = FontWeight.Bold,
+                color = Color(0xFFF3E6D2),
+                fontFamily = FontFamily.Serif
                 
                 )
+            Spacer(modifier = Modifier.height(25.dp))
 
+            CircularProgressIndicator(
+                color = Color(0xFFF3E6D2),
+                strokeWidth = 4.dp
+            )
         }
     }
 
@@ -80,5 +90,6 @@ fun SplashScreen(onNavigate: () -> Unit){
 fun SplashScreenPreview(){
         BasketBuddyTheme {
             SplashScreen(onNavigate = { })
+            //TopBar("Hello", onBackClick = { })
         }
 }
