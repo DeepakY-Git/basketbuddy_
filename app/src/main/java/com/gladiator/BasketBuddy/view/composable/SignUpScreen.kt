@@ -97,7 +97,7 @@ fun SignUpScreen(
 
         Spacer(modifier = Modifier.height(30.dp))
 
-        // EMAIL
+        //EMAIL
         OutlinedTextField(
             value = uiState.email,
             onValueChange = {
@@ -187,8 +187,7 @@ fun SignUpScreen(
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // SIGN UP BUTTON
-
+        //SIGNUP BUTTON
         Button(
             onClick = {
                 viewModel.onAction(
@@ -234,20 +233,16 @@ fun SignUpScreen(
         Spacer(modifier = Modifier.height(18.dp))
 
         Row {
-
             Text(
                 text = "Already a user? ",
                 color = Color.Gray
             )
-
             Text(
                 text = "Log in",
                 color = Color(0xFFB08968),
                 fontWeight = FontWeight.Bold
             )
-
         }
-
         Spacer(modifier = Modifier.height(40.dp))
     }
 }
