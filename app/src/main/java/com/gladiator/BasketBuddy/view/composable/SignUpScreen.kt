@@ -1,7 +1,6 @@
 package com.gladiator.BasketBuddy.view.composable
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -242,24 +241,19 @@ fun SignUpScreen(navController: NavController,
             Text(
                 text = "Log in",
                 color = Color(0xFFB08968),
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.clickable{
-                    navController.navigate("login"){
-                        launchSingleTop=true
-                    }
-                }
+                fontWeight = FontWeight.Bold
             )
         }
         Spacer(modifier = Modifier.height(40.dp))
     }
 }
 
-
+//
 //@Preview(showBackground = true)
 //@Composable
 //fun SignUpScreenPreview() {
 //
-//        SignUpScreen(,
+//        SignUpScreen(
 //            viewModel  = SignUpViewModel(),
 //            onSignUpSuccess = { }
 //      )
