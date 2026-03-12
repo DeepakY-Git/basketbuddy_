@@ -1,6 +1,5 @@
 package com.gladiator.BasketBuddy.view.composable
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -10,25 +9,17 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.ShoppingBasket
-import androidx.compose.material.icons.filled.Visibility
-import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -36,8 +27,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -45,60 +34,46 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.gladiator.BasketBuddy.viewmodel.LoginAction
 import com.gladiator.BasketBuddy.viewmodel.LoginViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SingleTopBar(title: String){
+    TopAppBar(
+        title = {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.titleLarge,
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Center
+            )
+        },
+        colors = TopAppBarDefaults.topAppBarColors()
+    )
+}
 @Composable
 fun LoginScreen(navController: NavController,viewModel: LoginViewModel,onLoginSuccess: () -> Unit = {},modifier: Modifier= Modifier){
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    var passwordVisible by remember { mutableStateOf(false) }
-
-//    Scaffold (
-//        topBar = {SingleTopBar("Login")}
-//    ){ paddingValues ->
-
-        Column(modifier = Modifier.fillMaxSize().background(Color(0xFFF5EBDD))
-            .verticalScroll(rememberScrollState()),
+    Scaffold (
+        topBar = {SingleTopBar("Login")}
+    ){paddingValues ->
+        Column(modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
-            //verticalArrangement = Arrangement.Top
-        ) {
+            verticalArrangement = Arrangement.Top) {
 
-            Spacer(modifier = Modifier.height(40.dp))
+            Spacer(modifier = Modifier.height(24.dp))
 
-            Icon(
-                imageVector = Icons.Default.ShoppingBasket,
-                contentDescription = "Basket",
-                tint = Color(0xFFB08968),
-                modifier = Modifier.size(70.dp)
-            )
-            Spacer(
-                modifier = Modifier.height(30.dp)
-            )
-            Text(
-                "Welcome Back",
-                fontSize = 26.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color(0xFF5A3E2B)
-            )
-
-            Spacer(modifier = Modifier.height(30.dp))
-
-            //Username
             OutlinedTextField(
                 value = uiState.username,
                 onValueChange = {viewModel.onAction(LoginAction.UsernameChanged(it))},
                 label = {Text("Username")},
-                leadingIcon = {
-                    Icon(Icons.Default.Person, contentDescription = null)
-                },
-                shape = RoundedCornerShape(14.dp),
+                shape = RoundedCornerShape(12.dp),
                 isError = uiState.usernameError!=null,
                 supportingText = {
                     uiState.usernameError?.let {error->
@@ -109,37 +84,26 @@ fun LoginScreen(navController: NavController,viewModel: LoginViewModel,onLoginSu
                     }
                 },
                 singleLine = true,
-                modifier= Modifier.fillMaxWidth().padding(10.dp)
+                modifier= Modifier.fillMaxWidth().padding(paddingValues).padding(10.dp)
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
 
-            //Password
+            var passwordVisible by remember { mutableStateOf(false) }
             OutlinedTextField(
                 value = uiState.password,
                 onValueChange = { viewModel.onAction(LoginAction.PasswordChanged(it)) },
                 label = { Text("Password") },
-                leadingIcon = {Icon(Icons.Default.Lock, contentDescription = null)},
-                //singleLine = true,
+                singleLine = true,
                 shape = RoundedCornerShape(12.dp),
                 visualTransformation = if (passwordVisible) VisualTransformation.None
                 else PasswordVisualTransformation(),
                 trailingIcon = {
-                    IconButton(
-                        onClick = {passwordVisible = !passwordVisible}
-                    ) {
-                        Icon(
-                            imageVector = if (passwordVisible)
-                            Icons.Default.Visibility
-                            else Icons.Default.VisibilityOff,
-                            contentDescription = null
-                        )
-                    }
-//                    TextButton(
-//                        onClick = { passwordVisible = !passwordVisible },
-//                        contentPadding = PaddingValues(0.dp)
-//                    ) { Text(if (passwordVisible) "Hide" else "Show") }
+                    TextButton(
+                        onClick = { passwordVisible = !passwordVisible },
+                        contentPadding = PaddingValues(0.dp)
+                    ) { Text(if (passwordVisible) "Hide" else "Show") }
                 },
+
                 isError = uiState.passwordError != null,
                 supportingText = {
                     uiState.passwordError?.let { error ->
@@ -149,21 +113,16 @@ fun LoginScreen(navController: NavController,viewModel: LoginViewModel,onLoginSu
                         )
                     }
                 },
-                singleLine = true,
                 modifier = Modifier.fillMaxWidth().padding(10.dp)
             )
-            Spacer(modifier = Modifier.height(5.dp))
 
-            //Login
+            Spacer(modifier = Modifier.height(24.dp))
 
             Button(
                 enabled = uiState.isFormValid && !uiState.isLoading,
                 onClick = {
                     viewModel.onAction(LoginAction.Submit(onSuccess = onLoginSuccess))
-                },
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFB08968)),
-                shape = RoundedCornerShape(14.dp),
-                modifier= Modifier.fillMaxWidth().padding(52.dp)
+                },modifier= Modifier.fillMaxWidth().padding(10.dp)
             ) {
                 if (uiState.isLoading){
                     CircularProgressIndicator(
@@ -171,26 +130,17 @@ fun LoginScreen(navController: NavController,viewModel: LoginViewModel,onLoginSu
                         strokeWidth = 2.dp,
                         color = MaterialTheme.colorScheme.onPrimary
                     )
-                } else{
-                    Text(
-                        "Login",
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.SemiBold
-                    )
                 }
+                Text("Login")
             }
-            Spacer(modifier = Modifier.height(40.dp))
         }
     }
 
-@Preview(showBackground = true)
-@Composable
-private fun LoginScreenPreview(){
-    val navController = rememberNavController()
-    LoginScreen(
-        navController = navController,
-        viewModel = LoginViewModel(),
-        onLoginSuccess = { }
-    )
-
 }
+
+//@Preview(showBackground = true)
+//@Composable
+//private fun LoginScreenPreview(){
+//    LoginScreen(viewModel())
+//
+//}

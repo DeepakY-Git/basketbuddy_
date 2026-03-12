@@ -12,8 +12,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.rememberNavController
 import com.gladiator.BasketBuddy.ui.theme.BasketBuddyTheme
 import com.gladiator.BasketBuddy.view.composable.AddItemScreen
+import com.gladiator.BasketBuddy.view.composable.AppNavGraph
 import com.gladiator.BasketBuddy.view.composable.HomeScreen
 import com.gladiator.BasketBuddy.view.composable.LoginScreen
 import com.gladiator.BasketBuddy.view.composable.SplashScreen
@@ -29,12 +31,12 @@ class MainActivity : ComponentActivity() {
             BasketBuddyTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
 
-                    SplashScreen(onNavigate = { })
+//                    SplashScreen(onNavigate = { })
 //                    Greeting(
 //                        name = "Android",
 //                        modifier = Modifier.padding(innerPadding)
 //                    )
-
+                    AppNavGraph(navController = rememberNavController())
                 }
             }
         }

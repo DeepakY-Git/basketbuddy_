@@ -11,10 +11,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 
-@Preview(showBackground = true)
+//@Preview(showBackground = true)
 @Composable
-fun AddListScreen() {
+fun AddListScreen(navController: NavController) {
     var listName by remember { mutableStateOf("") }
 
     Scaffold(
@@ -50,7 +51,7 @@ fun AddListScreen() {
             Spacer(modifier = Modifier.weight(1f))
 
             Button(
-                onClick = { },
+                onClick = { navController.navigate("addItem")},
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(56.dp),
