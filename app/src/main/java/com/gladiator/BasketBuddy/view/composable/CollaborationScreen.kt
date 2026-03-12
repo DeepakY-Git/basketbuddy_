@@ -1,7 +1,8 @@
 package com.gladiator.BasketBuddy.view.composable
 
 
-import androidx.compose.foundation.clickable
+
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
@@ -29,12 +31,17 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.gladiator.BasketBuddy.model.Group
+import com.gladiator.BasketBuddy.ui.theme.BasketBuddyTheme
 import com.gladiator.BasketBuddy.viewmodel.CollaborationViewModel
 
 
@@ -43,21 +50,31 @@ import com.gladiator.BasketBuddy.viewmodel.CollaborationViewModel
 fun GroupList(viewModel: CollaborationViewModel= viewModel(),onItemClick: (Group) -> Unit){
 
     val groups by viewModel.groups.collectAsState()
-    LazyColumn (modifier = Modifier.fillMaxSize().padding(10.dp)){
+    LazyColumn (modifier = Modifier.fillMaxSize().padding(16.dp)){
         items(items=groups,key={it.code}){group->
             Card(
-                modifier = Modifier.fillMaxWidth().padding(vertical = 12.dp, horizontal = 10.dp),
-                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-                onClick = {}
+                shape = RoundedCornerShape(16.dp),
+                modifier = Modifier.fillMaxWidth().padding(vertical = 10.dp),
+                elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
+                colors = CardDefaults.cardColors(containerColor = Color.White),
+                onClick = {
+                    {onItemClick(group)}
+                }
             ) {
-                Row (modifier = Modifier.padding(16.dp)) {
+                Row (modifier = Modifier.padding(18.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
                     Text(text=group.code.toString(),
-                        style = MaterialTheme.typography.bodyMedium)
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = Color(0xFFB08968),
+                        fontWeight = FontWeight.Bold)
 
                     Spacer(modifier = Modifier.width(16.dp))
 
-                    Text(text = group.groupName,
-                        style = MaterialTheme.typography.titleMedium)
+                    Text(
+                        text = group.groupName,
+                        style = MaterialTheme.typography.titleMedium,
+                        color = Color(0xFF5A3E2B))
                 }
             }
         }
@@ -75,7 +92,10 @@ fun Collaborations(
         topBar={TopBar("Collaborations", onBackClick = {navController.popBackStack()})},
         bottomBar = {BasketBuddyBottomNav(navController)}
     ){paddingValues ->
-        Column (modifier = Modifier.padding(paddingValues)){
+        Column (modifier = Modifier.padding(paddingValues)
+            .background(Color(0xFFF5EBDD))
+            .fillMaxSize()
+        ){
             var query by remember { mutableStateOf("") }
 
             OutlinedTextField(
@@ -88,16 +108,31 @@ fun Collaborations(
                 leadingIcon = {
                     Icon(
                         imageVector = Icons.Default.Search,
-                        contentDescription = "Search"
+                        contentDescription = "Search",
+                        tint = Color(0xFFB08968)
                     )
-                }
+                },
+                shape = RoundedCornerShape(14.dp)
             )
-
             LaunchedEffect(query) {
                 onSearch(query)
             }
             GroupList(viewModel=viewModel, onItemClick = {})
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun CollaborationPreview(){
+    val navController = rememberNavController()
+
+    BasketBuddyTheme {
+        Collaborations(
+            hint = "Search Groups",
+            onSearch = { },
+            navController = navController
+        )
     }
 }
 
