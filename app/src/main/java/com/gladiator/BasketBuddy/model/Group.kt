@@ -1,7 +1,8 @@
 package com.gladiator.BasketBuddy.model
 
 data class Group(
-    val code: Int,
-    val groupName: String
+    val groupCode: String="",
+    val groupName: String,
+    val ownerId:Int=0
 ) {
 }

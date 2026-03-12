@@ -51,7 +51,7 @@ fun GroupList(viewModel: CollaborationViewModel= viewModel(),onItemClick: (Group
 
     val groups by viewModel.groups.collectAsState()
     LazyColumn (modifier = Modifier.fillMaxSize().padding(16.dp)){
-        items(items=groups,key={it.code}){group->
+        items(items=groups,key={it.groupCode}){ group->
             Card(
                 shape = RoundedCornerShape(16.dp),
                 modifier = Modifier.fillMaxWidth().padding(vertical = 10.dp),
@@ -64,7 +64,7 @@ fun GroupList(viewModel: CollaborationViewModel= viewModel(),onItemClick: (Group
                 Row (modifier = Modifier.padding(18.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(text=group.code.toString(),
+                    Text(text=group.groupCode,
                         style = MaterialTheme.typography.bodyMedium,
                         color = Color(0xFFB08968),
                         fontWeight = FontWeight.Bold)

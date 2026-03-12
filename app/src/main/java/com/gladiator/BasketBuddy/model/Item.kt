@@ -1,6 +1,9 @@
 package com.gladiator.BasketBuddy.model
 
 
-
-data class Item(var itemName:String,var itemDescription: String,var quantity: Int=1) {
+data class Item(
+    val itemName:String="",
+    val itemDescription: String,
+    val quantity: Int=0,
+    val listId:Int=0) {
 }
