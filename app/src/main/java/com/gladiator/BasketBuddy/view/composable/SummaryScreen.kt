@@ -14,6 +14,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.gladiator.BasketBuddy.model.Item
 
 @Composable
@@ -36,6 +38,7 @@ fun ItemSummaryRow(
 
 @Composable
 fun ItemSummaryList(items: List<Item>, modifier: Modifier = Modifier){
+
     LazyColumn(modifier = modifier.padding(top = 10.dp)) {
         itemsIndexed(items){
                 index, item ->
@@ -49,8 +52,13 @@ fun ItemSummaryList(items: List<Item>, modifier: Modifier = Modifier){
 
 
 @Composable
-fun ItemSummaryScreen(items: List<Item>, modifier: Modifier = Modifier){
-    ItemSummaryList(items, modifier = modifier)
+fun ItemSummaryScreen(items: List<Item>, modifier: Modifier = Modifier, navController: NavController){
+
+    Column(Modifier.fillMaxSize()) {
+        TopBar(title = "Items Summary", onBackClick = {})
+        ItemSummaryList(items, modifier = modifier)
+        BasketBuddyBottomNav(navController)
+    }
 }
 
 @Preview(showBackground = true)
@@ -61,8 +69,7 @@ fun PreviewSummary(){
         Item("Bread", "Whole wheat", 1)
     )
     Column(modifier = Modifier.fillMaxSize()) {
-        TopBar(title = "Items Summary", onBackClick = {})
-        ItemSummaryScreen(items, modifier = Modifier.weight(1f))
-        BasketBuddyBottomNav()
+        var navController = rememberNavController()
+        ItemSummaryScreen(items, modifier = Modifier.weight(1f), navController)
     }
 }
