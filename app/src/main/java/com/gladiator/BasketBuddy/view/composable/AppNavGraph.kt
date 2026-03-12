@@ -2,7 +2,6 @@ package com.gladiator.BasketBuddy.view.composable
 
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -19,10 +18,18 @@ fun AppNavGraph(navController: NavHostController){
                 popUpTo("splash"){
                     inclusive=true
                 }
+                launchSingleTop=true
             } })
         }
         composable("signup"){
-            SignUpScreen(navController,viewModel())
+            SignUpScreen(navController,viewModel(), onSignUpSuccess = {
+                navController.navigate("login"){
+                    popUpTo("signup"){
+                        inclusive=true
+                    }
+                    launchSingleTop=true
+                }
+            })
         }
 
         composable("login"){
