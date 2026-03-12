@@ -1,5 +1,6 @@
 package com.gladiator.BasketBuddy.view.composable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -20,11 +21,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ModifierLocalBeyondBoundsLayout
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.gladiator.BasketBuddy.model.Item
 
 @Composable
@@ -105,12 +108,24 @@ fun ItemList(items: List<Item>) {
 fun ItemDisplayScreen(navController: NavController){
     val sampleItems=listOf(Item("Milk", "1 litre packet"),
         Item("Bread","Whole Wheat bread"))
-    Column (modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.SpaceBetween){
+    Column (modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Top){
         TopBar(title = "Groceries", onBackClick = {})
-        ItemList(sampleItems)
-        Button(onClick = {}, modifier = Modifier.align(Alignment.CenterHorizontally)) {
+        Box(modifier = Modifier.weight(1f)){
+            ItemList(sampleItems)
+        }
+//        ItemList(sampleItems)
+        Button(onClick = {}, modifier = Modifier.align(Alignment.CenterHorizontally).padding(bottom = 8.dp)) {
             Text("Save")
         }
         BasketBuddyBottomNav(navController)
     }
+}
+
+
+@Preview(showBackground = true)
+@Composable
+fun itemdisplayPreview(){
+    var navController = rememberNavController()
+    ItemDisplayScreen(navController)
+
 }

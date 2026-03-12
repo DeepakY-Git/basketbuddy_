@@ -1,138 +1,111 @@
 package com.gladiator.BasketBuddy.view.composable
 
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import com.gladiator.BasketBuddy.model.Item
 
-//@Preview(showBackground = true)
 @Composable
 fun AddItemScreen(navController: NavController) {
-    // These are temporary UI-only states for local interactions
-    // They will be replaced by viewModel.uiState later
     var itemName by remember { mutableStateOf("") }
     var itemDescription by remember { mutableStateOf("") }
 
-    // Dropdown UI-only logic
-    var isExpanded by remember { mutableStateOf(false) }
-    var selectedUnit by remember { mutableStateOf("kg") }
-    val units = listOf("kg", "g", "Ltr", "pcs", "pkt")
+    // Matches the 'quantity' field in your Item data class
+    var quantityText by remember { mutableStateOf("") }
 
     Scaffold(
-        topBar = { TopBar("Add Item", onBackClick = {navController.popBackStack()}) },      // Reusing your TopBar.kt
-        bottomBar = { BasketBuddyBottomNav(navController) } // Reusing your BottomNavBar.kt
+        topBar = { TopBar("Add Item", onBackClick = { navController.popBackStack() }) },
+        bottomBar = { BasketBuddyBottomNav(navController) }
     ) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
                 .padding(24.dp),
-            verticalArrangement = Arrangement.spacedBy(20.dp),
+            verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Header Text for better UX
             Text(
                 text = "Enter Item Details",
                 style = MaterialTheme.typography.headlineSmall,
-                modifier = Modifier.align(Alignment.Start)
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier
+                    .align(Alignment.Start)
+                    .padding(bottom = 24.dp)
             )
 
-            // 1. Item Name - Appealing Outlined Style
+            // 1. Item Name
             OutlinedTextField(
                 value = itemName,
-                onValueChange = { itemName = it }, // UI logic only
+                onValueChange = { itemName = it },
                 label = { Text("Item Name") },
-                placeholder = { Text("e.g. Rice") },
+                placeholder = { Text("e.g. Milk") },
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(12.dp),
                 singleLine = true
             )
 
-            // 2. Row for Description and Unit Dropdown
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // 2. Item Description
+            OutlinedTextField(
+                value = itemDescription,
+                onValueChange = { itemDescription = it },
+                label = { Text("Description") },
+                placeholder = { Text("e.g. 1 litre packet") },
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(12.dp)
+            )
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            // 3. Quantity Selector (Matching your Data Class)
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Start
             ) {
-                // Item Description
-                OutlinedTextField(
-                    value = itemDescription,
-                    onValueChange = { itemDescription = it },
-                    label = { Text("Description") },
-                    modifier = Modifier.weight(1.5f),
-                    shape = RoundedCornerShape(12.dp)
-                )
 
-                // 3. Unit Dropdown (UI Logic Only)
-                Box(modifier = Modifier.weight(1f)) {
-                    OutlinedTextField(
-                        value = selectedUnit,
-                        onValueChange = {},
-                        readOnly = true, // Makes it behave like a dropdown
-                        label = { Text("Unit") },
-                        trailingIcon = { Icon(Icons.Default.ArrowDropDown, null) },
-                        modifier = Modifier.clickable { isExpanded = true },
-                        shape = RoundedCornerShape(12.dp),
-                        enabled = false, // Prevents typing, forces click
-                        colors = OutlinedTextFieldDefaults.colors(
-                            disabledTextColor = MaterialTheme.colorScheme.onSurface,
-                            disabledBorderColor = MaterialTheme.colorScheme.outline,
-                            disabledLabelColor = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    )
-                    DropdownMenu(
-                        expanded = isExpanded,
-                        onDismissRequest = { isExpanded = false }
-                    ) {
-                        units.forEach { unit ->
-                            DropdownMenuItem(
-                                text = { Text(unit) },
-                                onClick = {
-                                    selectedUnit = unit
-                                    isExpanded = false
-                                }
-                            )
+                OutlinedTextField(
+                    value = quantityText,
+                    onValueChange = { input ->
+                        // Only allow numeric input
+                        if (input.all { it.isDigit() }) {
+                            quantityText = input
                         }
-                    }
-                }
+                    },
+                    label = { Text("Quantity") },
+                    placeholder = { Text("1") },
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(12.dp),
+                    singleLine = true
+                )
+                Spacer(modifier = Modifier.weight(1f))
+
+
             }
 
             Spacer(modifier = Modifier.weight(1f))
 
-            // 4. ADD Button - Visually appealing primary action
+            // 4. ADD Button
             Button(
-                onClick = { navController.navigate("itemDisplay") },
+                onClick = {
+                    // This matches your Item(itemName, itemDescription, quantity)
+                    val newItem = Item(itemName, itemDescription, quantityText.toInt())
+
+                    navController.navigate("itemDisplay")
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(56.dp),
@@ -145,4 +118,11 @@ fun AddItemScreen(navController: NavController) {
             }
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewAddItem() {
+    val navController = rememberNavController()
+    AddItemScreen(navController)
 }
