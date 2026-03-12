@@ -200,7 +200,7 @@ fun ItemDisplayScreen(
                     Text("Save")
                 }
             }
-            // === Add (+) Floating Button, above the bottom nav bar ===
+
             FloatingActionButton(
                 onClick = {
                     navController.navigate("addItem")
