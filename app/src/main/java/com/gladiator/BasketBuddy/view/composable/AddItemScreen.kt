@@ -51,7 +51,7 @@ fun AddItemScreen(navController: NavController) {
     val units = listOf("kg", "g", "Ltr", "pcs", "pkt")
 
     Scaffold(
-        topBar = { TopBar("Add Item", onBackClick = {}) },      // Reusing your TopBar.kt
+        topBar = { TopBar("Add Item", onBackClick = {navController.popBackStack()}) },      // Reusing your TopBar.kt
         bottomBar = { BasketBuddyBottomNav(navController) } // Reusing your BottomNavBar.kt
     ) { paddingValues ->
         Column(

@@ -19,7 +19,7 @@ fun AddListScreen(navController: NavController) {
     var listName by remember { mutableStateOf("") }
 
     Scaffold(
-        topBar = { TopBar("Add List", onBackClick = {}) },
+        topBar = { TopBar("Add List", onBackClick = {navController.popBackStack()}) },
         bottomBar = { BasketBuddyBottomNav(navController) },
         containerColor = MaterialTheme.colorScheme.background
     ) { paddingValues ->
