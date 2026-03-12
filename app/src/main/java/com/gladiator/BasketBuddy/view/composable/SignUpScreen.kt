@@ -253,9 +253,9 @@ fun SignUpScreen(navController: NavController,
 @Composable
 fun SignUpScreenPreview() {
 
-//        SignUpScreen(
-//            viewModel  = SignUpViewModel(),
-//            onSignUpSuccess = { }
-//      )
+        SignUpScreen(
+            viewModel  = SignUpViewModel(),
+            onSignUpSuccess = { }
+      )
 
 }
