@@ -12,11 +12,14 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -37,6 +40,21 @@ import androidx.navigation.NavController
 import com.gladiator.BasketBuddy.viewmodel.LoginAction
 import com.gladiator.BasketBuddy.viewmodel.LoginViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SingleTopBar(title: String){
+    TopAppBar(
+        title = {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.titleLarge,
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Center
+            )
+        },
+        colors = TopAppBarDefaults.topAppBarColors()
+    )
+}
 @Composable
 fun LoginScreen(navController: NavController,viewModel: LoginViewModel,onLoginSuccess: () -> Unit = {},modifier: Modifier= Modifier){
 
