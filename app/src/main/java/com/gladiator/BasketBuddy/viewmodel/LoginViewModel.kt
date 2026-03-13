@@ -3,6 +3,7 @@ package com.gladiator.BasketBuddy.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gladiator.BasketBuddy.model.LoginUiState
+import com.gladiator.BasketBuddy.repo.UserRepository
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -17,7 +18,7 @@ sealed interface LoginAction{
 }
 
 
-class LoginViewModel: ViewModel() {
+class LoginViewModel(private val repository: UserRepository= UserRepository()): ViewModel() {
     private val _uiState= MutableStateFlow(LoginUiState())
 
     val uiState: StateFlow<LoginUiState> = _uiState
@@ -53,10 +54,18 @@ class LoginViewModel: ViewModel() {
         if (usernameErr!=null || passwordErr!=null) return
 
         viewModelScope.launch {
-            try {
-                delay(1000)
-            }catch (e: Throwable){
-                _uiState.update { it.copy( error = "Something went wrong") }
+            val result=repository.loginUser(current.username,current.password)
+
+            result.onSuccess {
+                onSuccess()
+            }
+//            try {
+//                delay(1000)
+//            }catch (e: Throwable){
+//                _uiState.update { it.copy( error = "Something went wrong") }
+//            }
+            result.onFailure {
+                _uiState.update { it.copy(error = "Invalid username or password") }
             }
         }
 

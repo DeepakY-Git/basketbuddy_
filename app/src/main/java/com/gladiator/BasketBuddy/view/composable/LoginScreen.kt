@@ -154,16 +154,34 @@ fun LoginScreen(navController: NavController,viewModel: LoginViewModel,onLoginSu
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            //Login Button
+//            //Login Button
+//            Button(
+//                enabled = uiState.isFormValid,
+//                onClick = {
+//                    viewModel.onAction(LoginAction.Submit(onSuccess = onLoginSuccess))
+//                    navController.navigate("home")
+//                },
+//                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFB08968)),
+//                shape = RoundedCornerShape(14.dp),
+//                modifier= Modifier.fillMaxWidth().height(52.dp)
+//            ) {
+//                Text("Login")
+//            }
+
             Button(
                 enabled = uiState.isFormValid,
                 onClick = {
-                    viewModel.onAction(LoginAction.Submit(onSuccess = onLoginSuccess))
-                    navController.navigate("home")
+                    viewModel.onAction(
+                        LoginAction.Submit(
+                            onSuccess = {
+                                navController.navigate("home")
+                            }
+                        )
+                    )
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFB08968)),
                 shape = RoundedCornerShape(14.dp),
-                modifier= Modifier.fillMaxWidth().height(52.dp)
+                modifier = Modifier.fillMaxWidth().height(52.dp)
             ) {
                 Text("Login")
             }
@@ -180,5 +198,4 @@ private fun LoginScreenPreview(){
         viewModel = LoginViewModel(),
         navController = navController,
         onLoginSuccess = {})
-
 }

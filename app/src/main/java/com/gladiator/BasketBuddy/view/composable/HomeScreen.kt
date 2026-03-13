@@ -45,9 +45,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.gladiator.BasketBuddy.ui.theme.BasketBuddyTheme
+import com.gladiator.BasketBuddy.viewmodel.HomeViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -70,7 +72,7 @@ fun TopBar(title: String){
     )
 }
 @Composable
-fun HomeScreen(navController: NavController) {
+fun HomeScreen(navController: NavController,viewModel: HomeViewModel= HomeViewModel()) {
 
 
     var joinCode by remember { mutableStateOf("") }
@@ -234,8 +236,14 @@ fun HomeScreen(navController: NavController) {
 
                     Button(
                         onClick = {
-                            navController.navigate("collaboration") {
-                                launchSingleTop = true
+                            viewModel.createGroup(
+                                groupName=groupName,
+                                groupCode = generatedCode,
+                                ownerId = 1
+                            ) {
+                                navController.navigate("collaboration") {
+                                    launchSingleTop = true
+                                }
                             }
                         },
                         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFB08968)),
