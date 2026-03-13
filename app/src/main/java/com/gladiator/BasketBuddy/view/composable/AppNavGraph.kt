@@ -5,27 +5,27 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.gladiator.BasketBuddy.model.Group
+import com.gladiator.BasketBuddy.model.Screen
 
 @Composable
 fun AppNavGraph(navController: NavHostController){
 
     NavHost(
         navController=navController,
-        startDestination = "splash"
+        startDestination = Screen.Splash.route
     ) {
-        composable("splash"){
-            SplashScreen(onNavigate = {navController.navigate("signup"){
-                popUpTo("splash"){
+        composable(Screen.Splash.route){
+            SplashScreen(onNavigate = {navController.navigate(Screen.SignUp.route){
+                popUpTo(Screen.Splash.route){
                     inclusive=true
                 }
                 launchSingleTop=true
             } })
         }
-        composable("signup"){
+        composable(Screen.SignUp.route){
             SignUpScreen(navController,viewModel(), onSignUpSuccess = {
-                navController.navigate("login"){
-                    popUpTo("signup"){
+                navController.navigate(Screen.Login.route){
+                    popUpTo(Screen.SignUp.route){
                         inclusive=true
                     }
                     launchSingleTop=true
@@ -33,33 +33,33 @@ fun AppNavGraph(navController: NavHostController){
             })
         }
 
-        composable("login"){
+        composable(Screen.Login.route){
             LoginScreen(navController,viewModel(), onLoginSuccess = {
-                navController.navigate("home"){
-            } })
+                navController.navigate(Screen.Home.route){
+                } })
         }
 
-        composable("home"){
+        composable(Screen.Home.route){
             HomeScreen(navController)
         }
 
-        composable("collaboration"){
+        composable(Screen.Collaboration.route){
             Collaborations(hint = "search", onSearch = {}, navController = navController)
         }
 
-        composable("listScreen"){
-           ListScreen(navController)
+        composable(Screen.ListDisplay.route){
+            ListScreen(navController)
         }
 
-        composable("itemDisplay"){
+        composable(Screen.ItemDisplay.route){
             ItemDisplayScreen(navController)
         }
 
-        composable("addList"){
+        composable(Screen.AddList.route){
             AddListScreen(navController)
         }
 
-        composable("addItem"){
+        composable(Screen.AddItem.route){
             AddItemScreen(navController)
         }
         composable("summaryScreen"){

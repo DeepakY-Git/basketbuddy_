@@ -11,4 +11,5 @@ object FirebaseClient {
     val usersRef = database.getReference(DatabaseNodes.USERS)
     val groupsRef = database.getReference(DatabaseNodes.GROUPS)
     val userGroupsRef = database.getReference(DatabaseNodes.USER_GROUPS)
+    val listsRef = database.getReference(DatabaseNodes.LISTS)
 }

@@ -22,6 +22,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gladiator.BasketBuddy.model.Group
 import com.gladiator.BasketBuddy.repo.GroupRepository
+import com.gladiator.BasketBuddy.repo.GroupSession
 import com.gladiator.BasketBuddy.repo.UserSession
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -79,5 +80,9 @@ class CollaborationViewModel(
 
     fun clearMessage() {
         _message.value = null
+    }
+
+    fun onGroupSelected(group: Group) {
+        GroupSession.setSelectedGroup(group)
     }
 }

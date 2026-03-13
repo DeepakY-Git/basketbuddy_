@@ -123,6 +123,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.gladiator.BasketBuddy.repo.GroupSession
 import com.gladiator.BasketBuddy.repo.UserSession
 
 @Composable
@@ -171,6 +172,7 @@ fun BasketBuddyBottomNav(navController: NavController) {
             selected = selectedIndex == 2,
             onClick = {
                 selectedIndex = 2
+                GroupSession.clear()
                 UserSession.clear()
                 navController.navigate("login")
             },

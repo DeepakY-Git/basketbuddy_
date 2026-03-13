@@ -10,17 +10,23 @@ import androidx.compose.foundation.layout.fillMaxWidth
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -35,12 +41,24 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.gladiator.BasketBuddy.R
-import kotlinx.coroutines.delay
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.gladiator.BasketBuddy.model.ItemList
+import com.gladiator.BasketBuddy.viewmodel.BasketViewModel
 
 
 @Composable
-fun ListScreen(navController: NavController) {
-    val hint = "Search for groups..."
+fun ListScreen(
+    navController: NavController,
+    viewModel: BasketViewModel = viewModel()
+) {
+    val hint = "Search lists..."
+    val lists by viewModel.lists.collectAsState()
+    val selectedGroupName by viewModel.selectedGroupName.collectAsState()
+    val message by viewModel.message.collectAsState()
+
+    LaunchedEffect(Unit) {
+        viewModel.loadListsForSelectedGroup()
+    }
 
     Scaffold (
         topBar={
@@ -53,28 +71,74 @@ fun ListScreen(navController: NavController) {
             .background(Color(0xFFF5EBDD))
             .padding(paddingValues))
         {
+            if (selectedGroupName.isNotBlank()) {
+                Text(
+                    text = "Group: $selectedGroupName",
+                    style = MaterialTheme.typography.titleMedium,
+                    color = Color(0xFF5A3E2B),
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                )
+            }
+
             ListDisplayScreen(
                 hint = hint,
                 onSearch = { message ->
-                    println("Searching for: $message")
+                    viewModel.onSearch(message)
                 }
             )
+
+            message?.let {
+                Text(
+                    text = it,
+                    color = MaterialTheme.colorScheme.error,
+                    modifier = Modifier.padding(horizontal = 16.dp)
+                )
+            }
+
+            ListsContent(lists = lists)
+
             Spacer(Modifier.weight(1f))
 
-           Row (
-               modifier = Modifier.fillMaxWidth()
-                   .padding(16.dp),
-               horizontalArrangement = Arrangement.End
-           ){
-               IconButton(onClick = {navController.navigate("addList")}) {
-                   Icon(
-                       painter = painterResource(id = R.drawable.outline_playlist_add_24),
-                       contentDescription = "Add List",
-                       modifier = Modifier.size(50.dp),
-                       tint = Color(0xFFB08968)
-                   )
-               }
-           }
+            Row (
+                modifier = Modifier.fillMaxWidth()
+                    .padding(16.dp),
+                horizontalArrangement = Arrangement.End
+            ){
+                IconButton(onClick = {navController.navigate("addList")}) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.outline_playlist_add_24),
+                        contentDescription = "Add List",
+                        modifier = Modifier.size(50.dp),
+                        tint = Color(0xFFB08968)
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun ListsContent(lists: List<ItemList>) {
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp)
+    ) {
+        items(lists, key = { it.listId }) { itemList ->
+            Card(
+                shape = RoundedCornerShape(14.dp),
+                colors = CardDefaults.cardColors(containerColor = Color.White),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 6.dp)
+            ) {
+                Text(
+                    text = itemList.name,
+                    style = MaterialTheme.typography.titleMedium,
+                    color = Color(0xFF5A3E2B),
+                    modifier = Modifier.padding(16.dp)
+                )
+            }
         }
     }
 }
@@ -103,10 +167,7 @@ fun ListDisplayScreen(
         shape = RoundedCornerShape(14.dp)
     )
 
-    LaunchedEffect(message) {
-        delay(300)
-        onSearch(message)
-    }
+    LaunchedEffect(message) { onSearch(message) }
 }
 
 
@@ -117,7 +178,7 @@ fun PreviewList() {
     val hint = "rrrrrrr....."
     var navController = rememberNavController()
 
-        ListScreen(navController)
+    ListScreen(navController)
 
 }
 

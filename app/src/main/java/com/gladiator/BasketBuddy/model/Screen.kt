@@ -7,7 +7,7 @@ sealed class Screen (val route: String){
     object Login :Screen("login")
     object Home :Screen("home")
     object Collaboration :Screen("collaboration")
-    object ListDisplay :Screen("listDisplay")
+    object ListDisplay :Screen("listScreen")
     object ItemDisplay: Screen("itemDisplay")
     object AddList: Screen("addList")
     object AddItem: Screen("addItem")
