@@ -39,6 +39,7 @@ class MainActivity : ComponentActivity() {
 //                        modifier = Modifier.padding(innerPadding)
 //                    )
                     AppNavGraph(navController = rememberNavController())
+                    //HomeScreen(navController = rememberNavController())
 
                 }
             }
