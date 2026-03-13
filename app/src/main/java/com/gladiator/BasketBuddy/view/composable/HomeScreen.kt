@@ -1,3 +1,5 @@
+//
+
 package com.gladiator.BasketBuddy.view.composable
 
 import android.content.Intent
@@ -31,6 +33,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -38,10 +42,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -78,6 +80,11 @@ fun HomeScreen(navController: NavController,viewModel: HomeViewModel= HomeViewMo
     var joinCode by remember { mutableStateOf("") }
     var groupName by remember { mutableStateOf("") }
     var generatedCode by remember { mutableStateOf("") }
+    val message by viewModel.message.collectAsState()
+
+    LaunchedEffect(Unit) {
+        viewModel.clearMessage()
+    }
 
     Scaffold(
         topBar = { TopBar("Home") },
@@ -124,6 +131,15 @@ fun HomeScreen(navController: NavController,viewModel: HomeViewModel= HomeViewMo
                         fontWeight = FontWeight.Bold
                     )
 
+                    message?.let {
+                        Spacer(Modifier.height(8.dp))
+                        Text(
+                            text = it,
+                            color = MaterialTheme.colorScheme.error,
+                            style = MaterialTheme.typography.bodySmall
+                        )
+                    }
+
                     Spacer(Modifier.height(12.dp))
 
 
@@ -139,8 +155,10 @@ fun HomeScreen(navController: NavController,viewModel: HomeViewModel= HomeViewMo
 
                     Button(
                         onClick = {
-                            navController.navigate("collaboration") {
-                                launchSingleTop = true
+                            viewModel.joinGroup(joinCode) {
+                                navController.navigate("collaboration") {
+                                    launchSingleTop = true
+                                }
                             }
                         },
                         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFB08968)),
@@ -239,8 +257,10 @@ fun HomeScreen(navController: NavController,viewModel: HomeViewModel= HomeViewMo
                             viewModel.createGroup(
                                 groupName=groupName,
                                 groupCode = generatedCode,
-                                ownerId = 1
                             ) {
+                                groupName = ""
+                                joinCode = ""
+                                generatedCode = ""
                                 navController.navigate("collaboration") {
                                     launchSingleTop = true
                                 }

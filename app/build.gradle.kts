@@ -91,6 +91,7 @@ dependencies {
         implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.1")
 
         // 4. Core & UI (Keep only the working Version Catalog items)
+        implementation(libs.kotlinx.coroutines.play.services)
         implementation(libs.androidx.core.ktx)
         implementation(libs.androidx.lifecycle.runtime.ktx)
         implementation(libs.androidx.activity.compose)

@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gladiator.BasketBuddy.model.LoginUiState
 import com.gladiator.BasketBuddy.repo.UserRepository
+import com.gladiator.BasketBuddy.repo.UserSession
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -57,6 +58,7 @@ class LoginViewModel(private val repository: UserRepository= UserRepository()): 
             val result=repository.loginUser(current.username,current.password)
 
             result.onSuccess {
+                UserSession.setCurrentUser(it)
                 onSuccess()
             }
 //            try {
