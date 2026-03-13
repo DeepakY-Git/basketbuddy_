@@ -118,27 +118,34 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.gladiator.BasketBuddy.repo.GroupSession
 import com.gladiator.BasketBuddy.repo.UserSession
 
 @Composable
 fun BasketBuddyBottomNav(navController: NavController) {
-    var selectedIndex by remember { mutableStateOf(0) }
+    //var selectedIndex by remember { mutableStateOf(0) }
+    val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
 
     NavigationBar (
+        modifier = Modifier.shadow(12.dp),
         containerColor = Color(0xFFF5EBDD)
     ){
         NavigationBarItem(
-            selected = selectedIndex == 0,
+            //selected = selectedIndex == 0,
+            selected = currentRoute == "home",
             onClick = {
-                selectedIndex = 0
+                //selectedIndex = 0
                 navController.navigate("home") {
-                    popUpTo("home") { inclusive = true } // Prevents stack buildup
+                    popUpTo("home")
+                    //{ inclusive = true } // Prevents stack buildup
+                    launchSingleTop = true
                 }
             },
             icon = { Icon(Icons.Filled.Home, contentDescription = "Home", modifier = Modifier.size(26.dp)) },
@@ -151,11 +158,14 @@ fun BasketBuddyBottomNav(navController: NavController) {
             )
         )
         NavigationBarItem(
-            selected = selectedIndex == 1,
+           // selected = selectedIndex == 1,
+            selected = currentRoute=="collaboration",
             onClick = {
-                selectedIndex = 1
+               // selectedIndex = 1
                 navController.navigate("collaboration"){
-                    popUpTo("collaboration"){ inclusive = true}
+                    //popUpTo("collaboration"){ inclusive = true}
+                    launchSingleTop=true
+
                 }
             },
             icon = { Icon(Icons.Filled.Groups, contentDescription = "Group", modifier = Modifier.size(26.dp))
@@ -169,9 +179,11 @@ fun BasketBuddyBottomNav(navController: NavController) {
         )
 
         NavigationBarItem(
-            selected = selectedIndex == 2,
+            //selected = selectedIndex == 2,
+            selected = currentRoute == "login",
             onClick = {
-                selectedIndex = 2
+                //selectedIndex = 2
+                //launchSingleTop = true
                 GroupSession.clear()
                 UserSession.clear()
                 navController.navigate("login")
